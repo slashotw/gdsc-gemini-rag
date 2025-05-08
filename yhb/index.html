@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>約會寶 APP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff4757;
+            --primary-light: #ff6b81;
+            --primary-dark: #e71d36;
+            --secondary-color: #2f3542;
+            --secondary-light: #57606f;
+            --light-bg: #f1f2f6;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --gradient: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', 'Heiti TC', 'Apple LiGothic', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--secondary-color);
+            background: var(--light-bg);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 40vh;
+            background: var(--gradient);
+            z-index: -1;
+            transform: skewY(-5deg) translateY(-50%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--white);
+            position: relative;
+        }
+        
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--white);
+            border-radius: 20px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--primary-color);
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+        
+        .card-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #dfe4ea;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.1);
+            outline: none;
+        }
+        
+        /* 關鍵字區域設計 */
+        .keywords-container {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 10px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .keyword-input-wrapper {
+            display: flex;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .keyword-input-wrapper input {
+            flex-grow: 1;
+            border-radius: 10px 0 0 10px;
+            border-right: none;
+            box-shadow: none;
+            border: 1px solid #dfe4ea;
+        }
+        
+        .add-keyword-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 10px 10px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .add-keyword-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            background: var(--gradient);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            box-shadow: 0 3px 8px rgba(255, 107, 129, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .tag:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 129, 0.4);
+        }
+        
+        .tag span {
+            margin-right: 10px;
+        }
+        
+        .tag button {
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .tag button:hover {
+            transform: scale(1.1);
+            background: #f1f1f1;
+        }
+        
+        .preset-tags {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        .preset-title {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .preset-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 14px;
+            background: var(--primary-color);
+            margin-right: 8px;
+            border-radius: 2px;
+        }
+        
+        .preset-tag {
+            display: inline-block;
+            background: white;
+            color: var(--secondary-color);
+            padding: 8px 16px;
+            border-radius: 50px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #eaeaea;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .preset-tag:hover {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 107, 129, 0.2);
+        }
+        
+        .search-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 16px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .search-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        .search-btn:hover {
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .search-btn:hover::before {
+            left: 100%;
+        }
+        
+        .error-message {
+            background: #ffeef0;
+            color: var(--primary-dark);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-color);
+            font-size: 14px;
+            display: none;
+        }
+        
+        .loading {
+            text-align: center;
+            margin: 30px 0;
+            display: none;
+        }
+        
+        .loading-spinner {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+        }
+        
+        .loading-spinner div {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 4px solid transparent;
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loading-spinner div:nth-child(2) {
+            border: 4px solid transparent;
+            border-bottom-color: var(--primary-light);
+            animation: spin 1.5s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading p {
+            color: var(--secondary-light);
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .results {
+            display: none;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-icon {
+            width: 30px;
+            height: 30px;
+            background: var(--primary-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+        
+        .section-text {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        .itinerary {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            white-space: pre-line;
+            position: relative;
+        }
+        
+        .places-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .category {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .category-header {
+            background: var(--gradient);
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-header::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: -15px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .places-list {
+            padding: 20px;
+        }
+        
+        .place-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f1f2f6;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .place-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .place-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .place-name {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .place-name::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .place-info {
+            font-size: 14px;
+            color: #666;
+            margin-left: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .place-rating {
+            color: #ff9f43;
+            margin-top: 8px;
+            font-size: 14px;
+            margin-left: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .place-rating i {
+            margin-right: 5px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: var(--secondary-light);
+            font-size: 14px;
+            margin-top: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            body::before {
+                height: 30vh;
+            }
+            
+            header {
+                padding: 30px 0;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+            }
+            
+            .app-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 35px;
+            }
+            
+            .places-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-body, .itinerary {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="app-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h1>約會寶 APP</h1>
+            <p>輕鬆規劃你的完美約會行程</p>
+        </header>
+        
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="card-title">搜尋約會地點</div>
+            </div>
+            
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="location"><i class="fas fa-map-marker-alt"></i> 目的地</label>
+                    <input type="text" id="location" placeholder="請輸入地點（例如：台北）" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="keywords"><i class="fas fa-tags"></i> 興趣關鍵字</label>
+                    <div class="keywords-container">
+                        <div class="keyword-input-wrapper">
+                            <input type="text" id="keyword-input" placeholder="輸入關鍵字（例如：咖啡廳、桌遊店）">
+                            <button class="add-keyword-btn" id="add-keyword-btn">加入</button>
+                        </div>
+                        
+                        <div class="tags-container" id="tags-container"></div>
+                        
+                        <div class="preset-tags">
+                            <div class="preset-title">熱門關鍵字</div>
+                            <span class="preset-tag" data-keyword="咖啡廳">咖啡廳</span>
+                            <span class="preset-tag" data-keyword="桌遊店">桌遊店</span>
+                            <span class="preset-tag" data-keyword="餐廳">餐廳</span>
+                            <span class="preset-tag" data-keyword="電影院">電影院</span>
+                            <span class="preset-tag" data-keyword="甜點店">甜點店</span>
+                            <span class="preset-tag" data-keyword="公園">公園</span>
+                            <span class="preset-tag" data-keyword="書店">書店</span>
+                            <span class="preset-tag" data-keyword="美術館">美術館</span>
+                            <span class="preset-tag" data-keyword="酒吧">酒吧</span>
+                            <span class="preset-tag" data-keyword="夜市">夜市</span>
+                            <span class="preset-tag" data-keyword="景點">景點</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="search-btn" id="search-btn">
+                    <i class="fas fa-magic"></i> 生成完美約會行程
+                </button>
+            </div>
+        </div>
+        
+        <div class="error-message" id="error-message"></div>
+        
+        <div class="loading" id="loading">
+            <div class="loading-spinner">
+                <div></div>
+                <div></div>
+            </div>
+            <p>正在精心規劃您的約會行程，請稍候...</p>
+        </div>
+        
+        <div class="results" id="results">
+            <div class="section-title">
+                <div class="section-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <div class="section-text">約會行程規劃</div>
+            </div>
+            <div class="itinerary" id="itinerary"></div>
+            
+            <div class="section-title">
+                <div class="section-icon">
+                    <i class="fas fa-map-pin"></i>
+                </div>
+                <div class="section-text">推薦地點一覽</div>
+            </div>
+            <div class="places-container" id="places-container"></div>
+        </div>
+        
+        <footer>
+            <p>© 2025 約會寶 APP - GDSC 2025 </p>
+        </footer>
+    </div>
+    
+    <script>
+        // 關鍵字輸入和標籤處理
+        const keywordInput = document.getElementById('keyword-input');
+        const addKeywordBtn = document.getElementById('add-keyword-btn');
+        const tagsContainer = document.getElementById('tags-container');
+        const presetTags = document.querySelectorAll('.preset-tag');
+        const keywords = [];
+        
+        // 添加關鍵字按鈕點擊
+        addKeywordBtn.addEventListener('click', function() {
+            const keyword = keywordInput.value.trim();
+            if (keyword !== '') {
+                addKeyword(keyword);
+                keywordInput.value = '';
+            }
+        });
+        
+        // Enter 鍵添加關鍵字
+        keywordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && this.value.trim() !== '') {
+                e.preventDefault();
+                addKeyword(this.value.trim());
+                this.value = '';
+            }
+        });
+        
+        // 預設關鍵字點擊
+        presetTags.forEach(tag => {
+            tag.addEventListener('click', function() {
+                addKeyword(this.dataset.keyword);
+            });
+        });
+        
+        function addKeyword(keyword) {
+            if (keywords.includes(keyword)) return;
+            
+            keywords.push(keyword);
+            
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.innerHTML = `
+                <span>${keyword}</span>
+                <button data-keyword="${keyword}">×</button>
+            `;
+            
+            tag.querySelector('button').addEventListener('click', function() {
+                removeKeyword(this.dataset.keyword);
+                tag.remove();
+            });
+            
+            tagsContainer.appendChild(tag);
+        }
+        
+        function removeKeyword(keyword) {
+            const index = keywords.indexOf(keyword);
+            if (index > -1) {
+                keywords.splice(index, 1);
+            }
+        }
+        
+        // 搜尋處理
+        const searchBtn = document.getElementById('search-btn');
+        const locationInput = document.getElementById('location');
+        const loadingElement = document.getElementById('loading');
+        const resultsElement = document.getElementById('results');
+        const itineraryElement = document.getElementById('itinerary');
+        const placesContainer = document.getElementById('places-container');
+        const errorMessage = document.getElementById('error-message');
+        
+        searchBtn.addEventListener('click', async function() {
+            const location = locationInput.value.trim();
+            
+            if (!location) {
+                showError('請輸入地點');
+                return;
+            }
+            
+            if (keywords.length === 0) {
+                showError('請至少選擇一個關鍵字');
+                return;
+            }
+            
+            // 隱藏錯誤訊息
+            errorMessage.style.display = 'none';
+            
+            // 顯示載入中
+            loadingElement.style.display = 'block';
+            resultsElement.style.display = 'none';
+            
+            try {
+                const response = await fetch('http://localhost:9000/keyword_search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        keywords: keywords,
+                        location: location
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('搜尋請求失敗');
+                }
+                
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                console.error('Error:', error);
+                showError('發生錯誤：' + error.message);
+            } finally {
+                loadingElement.style.display = 'none';
+            }
+        });
+        
+        function displayResults(data) {
+            // 顯示行程
+            itineraryElement.textContent = data.itinerary;
+            
+            // 顯示地點
+            placesContainer.innerHTML = '';
+            
+            for (const [category, places] of Object.entries(data.places)) {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'category';
+                
+                categoryElement.innerHTML = `
+                    <div class="category-header">${category}</div>
+                    <div class="places-list"></div>
+                `;
+                
+                const placesList = categoryElement.querySelector('.places-list');
+                
+                places.forEach(place => {
+                    const rating = place.rating ? `${place.rating} / 5 (${place.user_ratings_total} 則評論)` : '無評分';
+                    
+                    const placeElement = document.createElement('div');
+                    placeElement.className = 'place-item';
+                    placeElement.innerHTML = `
+                        <div class="place-name">${place.name}</div>
+                        <div class="place-info"><i class="fas fa-map-marker-alt"></i> ${place.address}</div>
+                        <div class="place-rating"><i class="fas fa-star"></i> ${rating}</div>
+                    `;
+                    
+                    placesList.appendChild(placeElement);
+                });
+                
+                placesContainer.appendChild(categoryElement);
+            }
+            
+            // 顯示結果區域並滾動到結果
+            resultsElement.style.display = 'block';
+            resultsElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function showError(message) {
+            errorMessage.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            errorMessage.style.display = 'block';
+            loadingElement.style.display = 'none';
+            errorMessage.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 初始化頁面時自動填入台北作為默認地點
+        locationInput.value = '台北';
+    </script>
+</body>
+</html> 
